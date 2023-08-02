@@ -1,25 +1,33 @@
 public class Array {
-    private int size;
-    private String[] array;
+    private int id;
+    private String array;
 
-   public Array(int size, String[] array) {
-      this.size = size;
+   public Array(int id, String array) {
+      this.id = id;
       this.array = array;
    }
 
-   public int getSize() {
-      return size;
+   public int getId() {
+      return id;
    }
 
-   public void setSize(int size) {
-      this.size = size;
+   public void setId(int id) {
+      this.id = id;
    }
 
-   public String[] getArray() {
+   public String getArray() {
       return array;
    }
 
-   public void setArray(String[] array) {
+   public void setArray(String array) {
       this.array = array;
+   }
+
+   @Override
+   public String toString() {
+      return "Array{" +
+              "id=" + id +
+              ", array='" + array + '\'' +
+              '}';
    }
 }
