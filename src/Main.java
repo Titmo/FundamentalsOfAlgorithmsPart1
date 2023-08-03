@@ -1,6 +1,8 @@
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
-        ArrayServes arrayServes = new ArrayServes();
+        ArrayServes arrayServes = new ArrayServes(11);
         System.out.println("arrayServes.add(\"loshka\") = " + arrayServes.add("loshka"));
         System.out.println("arrayServes.add(\"stol\") = " + arrayServes.add("stol"));
         System.out.println("arrayServes.add(\"doska\") = " + arrayServes.add("doska"));
@@ -12,11 +14,12 @@ public class Main {
         System.out.println("arrayServes.remove(3) = " + arrayServes.remove(3));
         System.out.println("arrayServes.contains(\"loshka\") = " + arrayServes.contains("loshka"));
         System.out.println("arrayServes.indexOf(\"loshka\") = " + arrayServes.indexOf("loshka"));
+        System.out.println("arrayServes.toArray() = " + Arrays.toString(arrayServes.toArray()));
+        System.out.println("arrayServes.size() = " + arrayServes.size());
         System.out.println("arrayServes.indexOf(\"loshka\") = " + arrayServes.lastIndexOf("loshka"));
 
-        arrayServes.all();
         arrayServes.clear();
         System.out.println("arrayServes.add(\"loshka\") = " + arrayServes.add("loshka"));
-        arrayServes.all();
+
     }
 }

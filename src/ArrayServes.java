@@ -1,106 +1,86 @@
-public class ArrayServes implements StringList {
-    int size = 0;
-    int sizeArrays = 10;
-    Array[] arrays = new Array[sizeArrays];
+import java.util.Arrays;
 
-    public void all() {
-        for (int i = 0; i < size; i++) {
-            System.out.println(arrays[i].toString());
-        }
+public class ArrayServes implements StringList {
+    private final String[] array;
+    private int size;
+
+    public ArrayServes() {
+        array=new String[10];
+    }
+    public ArrayServes(int idSize) {
+        array=new String[idSize];
     }
 
     @Override
     public String add(String item) {
-        arrays[size] = new Array(size + 1, item);
-        size++;
-        return arrays[(size - 1)].toString();
+        checkItem(item);
+        checkSize();
+        array[size++] = item;
+        return item;
     }
 
     @Override
     public String add(int index, String item) {
-        if (index < sizeArrays) {
-            if (index >= size) {
-                arrays[size] = new Array(index, item);
-                size++;
-                return arrays[index - 1].toString();
-            } else {
-                arrays[index - 1].setArray(item);
-                return arrays[index - 1].toString();
-
-            }
-        } else {
-            return "size меньше";
+        checkItem(item);
+        checkSize();
+        checkIndex(index);
+        if (index == size) {
+            array[size++] = item;
         }
-
+        System.arraycopy(array, index, array, index = +1, size - index);
+        array[index] = item;
+        size++;
+        return item;
     }
 
     @Override
     public String set(int index, String item) {
-        if (index < sizeArrays || index > size) {
-            arrays[index - 1].setArray(item);
-            return arrays[index - 1].toString();
-        } else {
-            return "size меньше";
-        }
+        checkIndex(index);
+        checkItem(item);
+
+        array[index] = item;
+        return item;
     }
 
     @Override
     public String remove(String item) {
-        for (int i = 0; i < size; i++) {
-            if (arrays[i].getArray().equals(item)) {
-                for (int j = i; j < size; j++) {
-                    if (size != j + 1) {
-                        arrays[j + 1].setId((arrays[j + 1].getId() - 1));
-                        arrays[j] = arrays[j + 1];
-                    } else {
-                        arrays[j] = null;
-                        size--;
-                    }
-                }
-                return arrays[i].toString();
-            } else {
-                return "нет такого";
-            }
-        }
+        checkItem(item);
+        int index = indexOf(item);
 
-        return "нет такого";
+        if (index == -1) {
+            throw new ElementNotFaund();
+        }
+        if (index != size) {
+            System.arraycopy(array, index + 1, array, index, size - index);
+        }
+        size--;
+        return item;
     }
 
     @Override
     public String remove(int index) {
-        if (index < sizeArrays || index > size) {
-            arrays[index - 1] = null;
-            for (int j = index - 1; j < size; j++) {
-                if (size != j + 1) {
-                    arrays[j + 1].setId((arrays[j + 1].getId() - 1));
-                    arrays[j] = arrays[j + 1];
-                } else {
-                    arrays[j] = null;
-                    size--;
-                }
-            }
-            return arrays[index - 1].toString();
+        checkIndex(index);
 
-        } else {
-            return "нет такого";
+        String item = array[index];
+
+        if (index != size) {
+            System.arraycopy(array, index + 1, array, index, size - index);
         }
+        size--;
+        return null;
     }
+
 
     @Override
     public boolean contains(String item) {
-        for (int i = 0; i < size; i++) {
-            if (arrays[i].getArray().equals(item)) {
-                return true;
-            }
-        }
-        return false;
+        return indexOf(item) != -1;
     }
 
     @Override
     public int indexOf(String item) {
         for (int i = 0; i < size; i++) {
-            if (arrays[i].getArray().equals(item)) {
-                return arrays[i].getId();
+            if (array[i].equals(item)) {
+                return i;
             }
         }
         return -1;
@@ -108,9 +88,9 @@ public class ArrayServes implements StringList {
 
     @Override
     public int lastIndexOf(String item) {
-        for (int i = size - 1; i >= 0; i--) {
-            if (arrays[i].getArray().equals(item)) {
-                return arrays[i].getId();
+        for (int i = size-1; i >= 0; i--) {
+            if (array[i].equals(item)) {
+                return i;
             }
         }
         return -1;
@@ -118,15 +98,13 @@ public class ArrayServes implements StringList {
 
     @Override
     public String get(int index) {
-        if (index<=size) {
-            return arrays[index - 1].toString();
-        }
-        return "нет такого";
+        checkIndex(index);
+        return array[index];
     }
 
     @Override
     public boolean equals(StringList otherList) {
-        return arrays.equals(otherList);
+        return Arrays.equals(this.toArray(), otherList.toArray());
     }
 
     @Override
@@ -141,14 +119,30 @@ public class ArrayServes implements StringList {
 
     @Override
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            arrays[i]=null;
-        }
-        size=0;
+        size = 0;
     }
 
     @Override
     public String[] toArray() {
-        return new String[0];
+        return Arrays.copyOf(array, size);
     }
+
+    private void checkItem(String item) {
+        if (item == null) {
+            throw new NullItemException();
+        }
+    }
+
+    private void checkSize() {
+        if (size == array.length) {
+            throw new FullArrayException();
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > array.length) {
+            throw new IndexException();
+        }
+    }
+
 }
